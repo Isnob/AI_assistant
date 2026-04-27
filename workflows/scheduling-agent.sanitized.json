@@ -1,0 +1,104 @@
+{
+  "name": "Telegram Scheduling Agent",
+  "source": "Sanitized documentation export. Import manually and rebind credentials.",
+  "nodes": [
+    {
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "purpose": "Receives Telegram messages and starts the workflow."
+    },
+    {
+      "name": "Load and Save Long-Term Context",
+      "type": "n8n-nodes-base.postgres",
+      "purpose": "Ensures the user_context schema exists, handles explicit /remember messages, and loads core memory for the current session."
+    },
+    {
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "purpose": "Plans responses, decides which tools to call, and orchestrates calendar and memory operations."
+    },
+    {
+      "name": "Google Gemini Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "purpose": "LLM backend for the agent. Credential is not exported."
+    },
+    {
+      "name": "Postgres Chat Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "purpose": "Stores short-term chat history by Telegram session id."
+    },
+    {
+      "name": "List Calendar Events",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "purpose": "Reads user calendar events for planning and conflict checks."
+    },
+    {
+      "name": "Get Calendar Event",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "purpose": "Fetches a single calendar event by id."
+    },
+    {
+      "name": "Create Calendar Event",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "purpose": "Creates a personal Google Calendar event."
+    },
+    {
+      "name": "Update Calendar Event",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "purpose": "Updates a personal Google Calendar event."
+    },
+    {
+      "name": "Delete Calendar Event",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "purpose": "Deletes a personal Google Calendar event."
+    },
+    {
+      "name": "List University Schedule Events",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "purpose": "Reads a separate read-only university schedule calendar."
+    },
+    {
+      "name": "Save Long-Term Memory",
+      "type": "n8n-nodes-base.postgresTool",
+      "purpose": "Inserts durable memory into user_context with category, priority, core flag, confidence, and optional expiration."
+    },
+    {
+      "name": "Search Long-Term Memory",
+      "type": "n8n-nodes-base.postgresTool",
+      "purpose": "Searches active long-term memory by session, category, and text."
+    },
+    {
+      "name": "Manage Long-Term Memory",
+      "type": "n8n-nodes-base.postgresTool",
+      "purpose": "Soft-expires memory rows, or expires an old row and inserts a corrected replacement."
+    },
+    {
+      "name": "Send Telegram Reply",
+      "type": "n8n-nodes-base.telegram",
+      "purpose": "Sends the final agent answer back to the Telegram chat."
+    }
+  ],
+  "connections": [
+    ["Telegram Trigger", "Load and Save Long-Term Context"],
+    ["Load and Save Long-Term Context", "AI Agent"],
+    ["AI Agent", "Send Telegram Reply"],
+    ["Google Gemini Chat Model", "AI Agent"],
+    ["Postgres Chat Memory", "AI Agent"],
+    ["List Calendar Events", "AI Agent"],
+    ["Get Calendar Event", "AI Agent"],
+    ["Create Calendar Event", "AI Agent"],
+    ["Update Calendar Event", "AI Agent"],
+    ["Delete Calendar Event", "AI Agent"],
+    ["List University Schedule Events", "AI Agent"],
+    ["Save Long-Term Memory", "AI Agent"],
+    ["Search Long-Term Memory", "AI Agent"],
+    ["Manage Long-Term Memory", "AI Agent"]
+  ],
+  "credential_policy": {
+    "telegram": "Configure inside n8n. Do not commit bot tokens.",
+    "google_calendar": "Configure OAuth inside n8n. Do not commit client secrets or calendar ids.",
+    "llm": "Configure provider key inside n8n. Do not commit API keys.",
+    "postgres": "Use environment variables from .env."
+  }
+}
+
