@@ -51,12 +51,23 @@ flowchart LR
 
 ## Screenshots
 
-Screenshots are intentionally not committed yet. Add them later to:
+The screenshots below show the deployed workflow, Telegram interaction, calendar result, and PostgreSQL-backed memory state.
 
-- `assets/screenshots/n8n-workflow.png`
-- `assets/screenshots/telegram-demo.png`
-- `assets/screenshots/calendar-event-created.png`
-- `assets/screenshots/postgres-memory-query.png`
+### n8n Workflow
+
+![n8n workflow](assets/screenshots/n8n-workflow.png)
+
+### Telegram Demo
+
+![Telegram demo](assets/screenshots/telegram-demo.png)
+
+### Calendar Event Created
+
+![Calendar event created](assets/screenshots/calendar-event-created.jpg)
+
+### PostgreSQL Memory Query
+
+![PostgreSQL memory query](assets/screenshots/postgres-memory-query.png)
 
 See [docs/screenshots.md](docs/screenshots.md) for what each screenshot should show.
 
@@ -123,4 +134,3 @@ More runbook details are in [docs/operations.md](docs/operations.md).
 - [ ] Add structured calendar sync cache for university schedule analytics.
 - [ ] Add observability dashboards for execution failures and memory growth.
 - [ ] Add automated export of sanitized n8n workflows.
-
