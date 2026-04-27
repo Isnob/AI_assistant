@@ -1,0 +1,27 @@
+.env
+.env.*
+!.env.example
+
+# Runtime data
+postgres_data/
+npm_data/
+npm_letsencrypt/
+uploads/
+backups/
+
+# Local artifacts
+.DS_Store
+*.log
+*.tmp
+*.bak
+
+# Secrets and credentials
+*credentials*.json
+*service-account*.json
+*oauth*.json
+*.key
+*.pem
+
+# n8n exports may contain credentials if exported incorrectly.
+workflows/*.with-credentials.json
+
